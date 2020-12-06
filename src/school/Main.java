@@ -3,10 +3,15 @@ package school;
 import org.w3c.dom.ls.LSOutput;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         Random rnd = new Random();
+        try {
+
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Суть приложения: Создать эффективную школу " + "\n" +
                 "в которой требуется добиться максимального количества " + "\n" +
@@ -20,6 +25,9 @@ public class Main {
         System.out.println();
         System.out.print("Выберите уровень сложности: 1 Легко, 2 Средне, 3 Сложно: - ");
         int difficult = scanner.nextInt();
+
+
+
         if (difficult == 1) {
             System.out.println("Легко - выбрано");
 
@@ -37,13 +45,15 @@ public class Main {
             System.out.println(" ");
             System.out.println("Из списка приведённого ниже, вы можете выбрать лишь 2 учителей");
             System.out.println("(5 для выбора, 2 для пропуска)");
-            System.out.println("введи любую клавишу чтобы продолжить");
+            System.out.println("введи любую цифру чтобы продолжить");
             a = scanner.nextInt();
             Set<Teacher> teacherSet = Easy();
+            int t =1;
             for (Teacher teacher : teacherSet) {
-                System.out.println(" " + teacher.initialTeacher + "\n" + "* Предмет: " + teacher.since + "\n" +
+                System.out.println(t + ") " + teacher.initialTeacher + "\n" + "* Предмет: " + teacher.since + "\n" +
                         "* Категория: " + teacher.category
                         + "\n" + "* Оценка: " + teacher.diplom + "\n" + "* Стоимость в сутки: " + teacher.costDays);
+                t++;
             }
 
             i = 1;
@@ -149,7 +159,9 @@ public class Main {
             System.out.println("Сложно - выбрано");
         }
 
-
+        } catch (InputMismatchException e) {
+            System.out.println("Вы ввели не число");
+        }
 
 
 
@@ -157,17 +169,25 @@ public class Main {
     }
 
     public static Set<Teacher> Easy() {
-        Set<Teacher> teacherSet = new HashSet<>();
-        for (int i = 0; i < 50; i++) {
-            Teacher teacher = new Teacher(Teacher.initialTeacher(),
-                    Teacher.since(), Teacher.category(),
-                    Teacher.diplom(), Teacher.factorStady(),
-                    Teacher.potentialT(), Teacher.costDays());
-//            if (teacher.since.equals("Математика"))
-            teacherSet.add(teacher);
+        Set<Teacher> streamTeacher = Stream.generate(() -> new Teacher(Teacher.initialTeacher(),
+                Teacher.since(), Teacher.category(),
+                Teacher.diplom(), Teacher.factorStady(),
+                Teacher.potentialT(), Teacher.costDays()))
+        .limit(5)
+        .collect(Collectors.toSet());
+        System.out.println();
 
-        }
-        return teacherSet;
+//        Set<Teacher> teacherSet = new HashSet<>();
+//        for (int i = 0; i < 5; i++) {
+//            Teacher teacher = new Teacher(Teacher.initialTeacher(),
+//                    Teacher.since(), Teacher.category(),
+//                    Teacher.diplom(), Teacher.factorStady(),
+//                    Teacher.potentialT(), Teacher.costDays());
+////            if (teacher.since.equals("Математика"))
+//            teacherSet.add(teacher);
+//
+//        }
+        return streamTeacher;
 
     }
 
@@ -177,27 +197,24 @@ public class Main {
         Set<Teacher> teamTeachers = new HashSet<>();
         int value;
         int i = 1;
-
         System.out.println();
         System.out.println("any key to continue");
         int a = scanner.nextInt();
-
 // Учителя
         for (Teacher teacher : teachers) {
-            System.out.println("mid");
             System.out.println(i + ") " + teacher.initialTeacher + "\n" + "* Предмет: " + teacher.since + "\n" +
                     "* Категория: " + teacher.category + "\n" + "* Оценка: " +
                     teacher.diplom + "\n" + "* Стоимость в сутки: " + teacher.costDays);
+            System.out.println();
             i++;
             System.out.print("5 выбрать, 2 пропуск: ");
             value = scanner.nextInt();
             if (value == 5) {
-
                 teamTeachers.add(teacher);
                 System.out.println();
-
             }
             if (teamTeachers.size() == 2) {
+                System.out.println("_________________________________");
                 System.out.println();
                 return teamTeachers;
             }
@@ -212,6 +229,18 @@ public class Main {
     КЛАССЫ
      */
     public static Set<Student> studentGroupClassA() {
+//        Set<Student> streamStudent = Stream.generate(() -> new Student((Student.randomName()), Student.randomClasses(),
+//                Student.averageScore1(), Student.averageScore2(), Student.late(), Student.iq(),
+//                Student.potencial(), Student.budgetDay(), Student.mother(), Student.father(), Student.famalyBudget(),
+//                Student.profit()))
+//                .limit(1000)
+//                .filter(student -> student.equals("7А"))
+//                .limit(25)
+//                .collect(Collectors.toSet());
+//        for (Student stu : streamStudent) {
+//            System.out.println(stu);
+//        }
+//        }
         Set<Student> students = new HashSet<>(5);
         for (int i = 0; i < 1000; i++) {
             Student stu = new Student((Student.randomName()), Student.randomClasses(),
@@ -322,17 +351,13 @@ public class Main {
             if (a < 5) {
                 System.out.println("Что-то разбили/сломали/кого-то ударили и прочее на занятии/" +
                         "вне занятия - -1 к баллу по поведению ученика");
-                System.out.println(student.randomName+ "\n"  + "* Класс: " + student.randomClasses + "\n" +
-                        "* Поведение: " + student.averageScore1 + "\n" + "* Успеваемость: " + student.averageScore2 + "\n" +
-                        "* Склонность к опозданиям: " + student.late + "\n" + "* Базоый IQ: " + student.iq
-                        );
-//                student.setAverageScore1(Student.averageScore1()+700);
+//                System.out.println(student.randomName+ "\n"  + "* Класс: " + student.randomClasses + "\n" +
+//                        "* Поведение: " + student.averageScore1 + "\n" + "* Успеваемость: " + student.averageScore2);
+
                 int get = student.averageScore1;
                 student.setAverageScore1(get - 1);
-                System.out.println(student.randomName + "\n" +"* Класс: " + student.randomClasses + "\n" +
-                        "* Поведение: " + student.averageScore1 + "\n" + "* Успеваемость: " + student.averageScore2 + "\n" +
-                        "* Склонность к опозданиям: " + student.late + "\n" + "* Базоый IQ: " + student.iq
-                        );
+                System.out.println("Поведение ученика " +  student.randomClasses + " класса " +  student.randomName
+                        + " уменьшилось на 1" + "\n" + "* Поведение: " + student.averageScore1 + "\n" + "* Успеваемость: " + student.averageScore2);
             }
         }
         return students100;
